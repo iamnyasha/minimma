@@ -84,8 +84,7 @@ export default {
         {
           name: "general",
           label: "General Site Settings",
-          file: "src/content/settings/general.md",
-          format: "frontmatter",
+          file: "src/content/settings/general.json",
           description: "General site settings",
           fields: [
             {
@@ -127,8 +126,7 @@ export default {
         {
           name: "project",
           label: "Project",
-          file: "src/content/settings/project.md",
-          format: "frontmatter",
+          file: "src/content/settings/project.json",
           fields: [
             {
               name: "project_tags",
@@ -148,8 +146,7 @@ export default {
         {
           name: "footer",
           label: "Footer",
-          file: "src/content/settings/footer.md",
-          format: "frontmatter",
+          file: "src/content/settings/footer.json",
           fields: [
             {
               name: "socials",

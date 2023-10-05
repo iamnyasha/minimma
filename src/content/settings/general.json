@@ -1,0 +1,9 @@
+{
+  "title": "Minimma",
+  "description": "Minimal portfolio template",
+  "base_url": "/",
+  "keywords": ["astro", "template"],
+  "logo": "assets/m.png",
+  "favicon": "assets/m_w.png",
+  "url": "/"
+}
