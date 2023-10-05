@@ -1,0 +1,67 @@
+---
+import { Image } from 'astro:assets';
+import Layout from '../../layouts/Layout.astro';
+import { getEntry,getCollection } from "astro:content";
+
+const projectEntries = await getCollection("projects");
+const projects = projectEntries.sort((a,b)=>{return b.data.date - a.data.date});
+
+const { slug } = Astro.params;
+
+if (slug === undefined) {
+  throw new Error("Slug is required");
+}
+
+const entry = await getEntry("projects", slug);
+
+if (entry === undefined) {
+  return Astro.redirect("/404");
+}
+
+let previous = null, next = null
+
+const currentIndex = projects.findIndex(entry=>entry.slug===slug)
+
+if(currentIndex > 0) {
+    previous = projects[currentIndex-1]
+}
+
+if(currentIndex < projects.length) {
+    next = projects[currentIndex+1]
+}
+
+const { Content } = await entry.render();
+---
+
+<Layout title={entry.data.title}>
+  <div class="relative">
+    <div class="mx-auto px-8 md:max-w-7xl">
+      <div class="relative w-full mt-5 mb-10 mx-auto max-w-3xl">
+        <Image width="1000" src={entry.data.image} alt={entry.data.title} class="h-auto inline-block align-top w-full">
+      </div>
+      <div class="relative w-full mt-12 mb-16 mx-auto max-w-lg">
+        <h4 class="text-3xl font-normal uppercase tracking-[0.08em] text-center">
+          <strong class="font-semibold m-0 p-0">{entry.data.title}</strong>
+        </h4>
+        <h6 class="text-base font-normal normal-case opacity-80 text-center mt-2 mb-8">for {entry.data.tag.join(', ').replace(/,(?!.*,)/gmi, ' &')}</h6>
+        <div class="prose prose-zinc">
+          <Content />
+        </div>
+      </div>
+      <div class="mt-0 flex items-center justify-between space-between gap-6 w-full mx-auto max-w-lg mb-24 flex-col md:flex-row">
+        {previous ? <a href={`/project/${previous.slug}`} class="text-xs no-underline cursor-pointer font-bold leading-5 inline-block uppercase tracking-[0.12em] relative">
+          <span class="relative block transition duration-500 ease-in-out transform rounded hover:scale-105">
+            <Image width={244} class="relative block object-contain object-center w-full h-full max-w-[260px] h-auto inline-block align-top max-h-[260px]" loading="lazy" alt="" src={previous.data.image}>
+          </span>
+          <span class="absolute max-w-[100px] -translate-y-2/4 -translate-x-full left-[30px] top-2/4 bg-white py-1 px-2">Previous Project</span>
+        </a>:<span />}
+        {next ? <a href={`/project/${next.slug}`} class="text-xs no-underline cursor-pointer font-bold leading-5 inline-block uppercase tracking-[0.12em] relative">
+          <span class="relative block transition duration-500 ease-in-out transform rounded hover:scale-105">
+            <Image width={244} class="relative block object-contain object-center w-full h-full max-w-[260px] h-auto inline-block align-top w-auto max-h-[260px]" loading="lazy" alt="" src={next.data.image}>
+          </span>
+          <span class="absolute max-w-[100px] -translate-y-2/4 translate-x-full left-[inherit] right-[30px] top-2/4  bg-white py-1 px-2">Next Project</span>
+        </a>:<span />}
+      </div>
+    </div>
+  </div>
+</Layout>

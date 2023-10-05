@@ -1,0 +1,20 @@
+---
+import '@staticcms/core/dist/main.css';
+---
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Content Manager</title>
+    <style>.MuiPopper-root{z-index:9999!important}</style>
+  </head>
+  <body class="font-mono antialised">
+    <script>
+      import CMS from '@staticcms/core';
+      import config from '../scripts/config'
+      CMS.init({config});
+    </script>
+  </body>
+</html>

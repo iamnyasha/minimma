@@ -1,0 +1,21 @@
+---
+import { getEntry } from 'astro:content';
+const general = await getEntry('settings','general');
+const footer = await getEntry('settings','footer');
+---
+
+<footer class="block relative bg-zinc-200/60 w-full text-center py-32">
+  <div class="mx-auto px-8 md:max-w-7xl">
+    <div class="flex justify-center gap-8 mb-8">
+      {footer.data.socials.map(social=><a href={social.link} class="no-underline relative inline-block" title={social.name} aria-label={social.name} rel="noopener">
+        <span set:html={social.name}></span>
+      </a>)}
+    </div>
+    <p class="m-0 opacity-60">
+      <span>&copy; Copyright&nbsp;</span>
+      <span>{general.data.title}&nbsp;</span>
+      <span set:html={new Date().getFullYear()}></span>
+      <span>. All rights reserved.</span>
+    </p>
+  </div>
+</footer>

@@ -1,0 +1,117 @@
+---
+import { getCollection } from 'astro:content';
+
+import Layout from '../layouts/Layout.astro';
+import Card from '../components/Card.astro';
+import Hero from '../components/Hero.astro';
+
+const allProjects = await getCollection('projects');
+const projects = allProjects.sort((a,b)=>{return b.data.date - a.data.date});
+---
+
+<Layout title="Welcome to Astro.">
+  <script>
+    const masonry = () =>{
+      const portfolio = document.querySelector('.portfolio')
+      let column = 3;
+
+      const responsive = [
+        {
+          breakpoint: 1280,
+          column: 3,
+        },
+        {
+          breakpoint: 1024,
+          column: 2,
+        },
+        {
+          breakpoint: 768,
+          column: 1,
+        },
+      ];
+
+      const winWidth = window.innerWidth;
+
+      for (let i = 0; i < responsive.length; i++) {
+        if (winWidth <= responsive[i].breakpoint) {
+          column = responsive[i].column;
+        }
+      }
+
+      if (column === 1) {
+        const listElms = Array.prototype.slice.call(
+          portfolio.querySelectorAll("figure"),
+          0
+        );
+        listElms.forEach((listElm) => {
+          listElm.style.marginTop = "";
+        });
+
+        return false;
+      }
+
+      const listElms = Array.prototype.slice.call(
+        portfolio.querySelectorAll("figure"),
+        0
+      );
+
+      if (listElms.length === 0) {
+        return false;
+      }
+
+      listElms.forEach((listElm, index) => {
+        listElm.style.marginTop = "";
+
+        if (column > index) {
+          return;
+        }
+
+        const topListElm = listElms[index - column];
+        const topListElmPosi = topListElm.getBoundingClientRect().top;
+        const topListHeight = getHeightAndMarginBottom(topListElm);
+        const topListBottomPosi = topListElmPosi + topListHeight;
+        const listElmPosi = listElm.getBoundingClientRect().top;
+        let setPosi = listElmPosi.toFixed(0) - topListBottomPosi.toFixed(0) - 16;
+
+        if (setPosi === 0) {
+          return false;
+        }
+
+        setPosi = "-" + setPosi + "px";
+        listElm.style.marginTop = setPosi;
+      });
+    }
+
+    const getHeightAndMarginBottom= (elm) =>{
+      const height = elm.getBoundingClientRect().height;
+      const styles = getComputedStyle(elm);
+      const bottom = parseFloat(styles.marginBottom);
+      return height + bottom;
+    }
+
+    masonry();
+
+    window.addEventListener("resize", () => {
+      masonry();
+    });
+    document.addEventListener("DOMContentLoaded",()=>{
+      masonry();
+    });
+    document.addEventListener('astro:page-load', () => {
+      masonry();
+    });
+  </script>
+
+  <div class="relative">
+    <div class="mx-auto px-8 md:max-w-7xl">
+      <Hero />
+      <div class="relative w-full mt-5 mb-10">
+        <div class="clear-both relative">
+          <div class="grid flex-wrap items-start grid-cols-1 gap-4 lg:grid-cols-3 md:grid-cols-2 portfolio gap-8 ">
+            {projects.map((project,index)=><Card index={index+1} slug={project.slug} title={project.data.title} image={project.data.image} tags={project.data.tag} />)}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</Layout>

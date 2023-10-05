@@ -1,0 +1,18 @@
+---
+socials:
+  - target: _blank
+    name: Facebook
+    link: /
+  - target: _blank
+    name: "&#120143;"
+    link: /
+  - target: _blank
+    name: Instagram
+    link: /
+  - target: _blank
+    name: Behance
+    link: /
+  - target: _blank
+    name: YouTube
+    link: /
+---
